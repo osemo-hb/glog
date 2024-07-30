@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<h1 class="text-2xl font-bold mb-4 text-blue-500">Tavarat</h1>
-<a href="/items/create" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Lisää uusi</a>
+<h1 class="text-2xl font-bold mb-4 text-blue-500">Kategoriassa: {{ $category }}</h1>
+<a href="/items" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Back to All Items</a>
 <ul class="mt-4">
     @foreach ($items as $item)
         <li class="mb-2">
@@ -12,8 +12,7 @@
                 </div>
                 <div class="flex-grow ml-4">
                     <span class="block font-bold">{{ $item->title }}</span>
-                    <a href="{{ route('items.category', $item->category) }}" class="block text-gray-600">
-                    <span class="hover:underline block text-gray-1000">{{ $item->category }}</span>
+                    <span class="block text-gray-600">{{ $item->category }}</span>
                     <span class="block text-gray-600">{{ $item->quantity }} {{ $item->unit }}</span>
                     <span class="block text-gray-600 text-sm">{{ $item->created_at->format('d.m.Y') }}</span>
                 </div>

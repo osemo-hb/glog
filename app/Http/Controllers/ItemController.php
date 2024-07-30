@@ -25,10 +25,10 @@ class ItemController extends Controller
             'category' => 'required',
             'quantity' => 'required|integer',
             'unit' => 'required',
-            'image' => 'nullable|image',
+            'image' => 'nullable|image|max:2048',
         ]);
 
-        $path = $request->file('image') ? $request->file('image')->store('images') : null;
+        $path = $request->file('image') ? $request->file('image')->store('images', 'public') : null;
 
         Item::create([
             'title' => $request->title,
@@ -58,7 +58,15 @@ class ItemController extends Controller
         ]);
 
         $item = Item::findOrFail($id);
-        $path = $request->file('image') ? $request->file('image')->store('images') : $item->image;
+
+        if ($request->hasFile('image')) {
+            if ($item->image) {
+                \Storage::delete('public/' . $item->image);
+            }
+            $path = $request->file('image')->store('images', 'public');
+        } else {
+            $path = $item->image;
+        }
 
         $item->update([
             'title' => $request->title,
@@ -71,6 +79,12 @@ class ItemController extends Controller
         return redirect('/items');
     }
 
+    public function showByCategory($category)
+    {
+        $items = Item::where('category', $category)->get();
+        return view('items.category', compact('items', 'category'));
+    }
+    
     public function destroy($id) // To remove items
     {
         $item = Item::findOrFail($id);
